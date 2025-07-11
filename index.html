@@ -107,7 +107,7 @@
 <body>
     <div class="header" style="left: 100%; right:100%; top: 4%; height: 70px; background-color: black; color: white; padding-left: 10px; padding-right: 10px; font-family: 'Prompt', sans-serif;">
         <h3 style="top: 0%; transform: translate(0px, -10px);">
-            <image src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/imageedit_2_8531893643.png?v=1719501775940" width="50px" ></image>
+            <image src="https://reviews.bgmusic.xyz/logo.png" width="50px" ></image>
             <span style="font-size: 40px">|</span><span style="padding-left: 20px"><a href="/">Home</a><span style="font-size: 40px"> | </span><a href="/submit.htm">Queue Site</a></span>
         </h3>
     </div>
@@ -230,7 +230,7 @@
                         listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/review?" + encode(childSnapshot.key));
                         if (data.rewardNames) {
                             listItem.innerHTML = childSnapshot.key + 
-                                "<span> </span><span class='tooltipa'><img src='https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/rewards.png' width='28px'>" +
+                                "<span> </span><span class='tooltipa'><img src='https://reviews.bgmusic.xyz/rewards.png' width='28px'>" +
                                 "<span class='tooltiptexta'>This game has rewards!</span></span><br>";
                         } else {
                             listItem.innerHTML = childSnapshot.key + "<br>";
@@ -273,7 +273,7 @@
                             listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/review?" + encode(childSnapshot.key));
                             if (data.rewardNames) {
                                 listItem.innerHTML = `>> ${childSnapshot.key} <span> </span>` + 
-                                    "<span class='tooltipa'><img src='https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/rewards.png' width='28px'>" +
+                                    "<span class='tooltipa'><img src='https://reviews.bgmusic.xyz/rewards.png' width='28px'>" +
                                     "<span class='tooltiptexta'>This game has rewards!</span></span><br>";
                             } else {
                               hiddenResults = hiddenResults+1
@@ -342,7 +342,7 @@
                             if (data.storeNames) {
                         if (data.rewardNames) {
                             listItem.innerHTML = childSnapshot.key + 
-                                "<span> </span><span class='tooltipa'><img src='https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/rewards.png' width='28px'>" +
+                                "<span> </span><span class='tooltipa'><img src='https://reviews.bgmusic.xyz/rewards.png' width='28px'>" +
                                 "<span class='tooltiptexta'>This game has rewards!</span></span><br>";
                         } else {
                             listItem.innerHTML = childSnapshot.key + "<br>";
@@ -376,11 +376,11 @@
 
                         if (gameTitle.includes(input)) {
                             var listItem = document.createElement("a");
-                            listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/review?" + encode(childSnapshot.key));
+                            listItem.setAttribute("href", "https://reviews.bgmusic.xyz/review?" + encode(childSnapshot.key));
                             if (data.upcomming == 'on') {
                         if (data.rewardNames) {
                             listItem.innerHTML = childSnapshot.key + 
-                                "<span> </span><span class='tooltipa'><img src='https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/rewards.png' width='28px'>" +
+                                "<span> </span><span class='tooltipa'><img src='https://reviews.bgmusic.xyz/rewards.png' width='28px'>" +
                                 "<span class='tooltiptexta'>This game has rewards!</span></span><br>";
                         } else {
                             listItem.innerHTML = childSnapshot.key + "<br>";
@@ -414,7 +414,7 @@
                             listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/review?" + encode(childSnapshot.key));
                             if (data.rewardNames) {
                                 listItem.innerHTML = `>> ${childSnapshot.key} <span> </span>` + 
-                                    "<span class='tooltipa'><img src='https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/rewards.png' width='28px'>" +
+                                    "<span class='tooltipa'><img src='https://reviews.bgmusic.xyz/rewards.png' width='28px'>" +
                                     "<span class='tooltiptexta'>This game has rewards!</span></span><br>";
                             } else {
                                 listItem.innerHTML = `>> ${childSnapshot.key} <br>`;
