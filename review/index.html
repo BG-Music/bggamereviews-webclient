@@ -172,7 +172,7 @@
     </style>
   <div class="header" style="left: 100%; right:100%; top: 4%; height: 70px; background-color: black; color: white; padding-left: 10px; padding-right: 10px; font-family: 'Prompt', sans-serif;">
     <h3 style="top: 0%; transform: translate(0px, -10px);">
-      <image src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/imageedit_2_8531893643.png?v=1719501775940" width="50px" ></image>
+      <image src="https://reviews.bgmusic.xyz/main-logo.png" width="50px" ></image>
       <span style="font-size: 40px">|</span><span style="padding-left: 20px"><a href="/" style="font-size: 20px">Home</a> <span style="font-size: 20px">> Review > </span><span id="headGameName">${GAME}</span></span>
     </h3>
   </div>
@@ -305,9 +305,9 @@ optionCUSTOM.style.border = deSelectedColor
 <hr>
 <h3>Share this page</h3>
 <div class="share-btns">
-<button onclick='navigator.share({title: "BG Game Reviews", text: "I have found a cool game! Heres a even cooler review the game called " + document.getElementById("gameName").textContent, url: ""})'><img src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/share.png"></button>
-<button onclick='navigator.clipboard.writeText("https://bg-game-reviews.glitch.me/review?" + encode(gameName)).then(() => { document.getElementById("outputSHARE").textContent = "Copied URL to clipboard!"; })'><img src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/link.png" alt="Share"></button>
-<button onclick='window.open(`https://twitter.com/share?lang=en&text=I found a cool review for a game called ${document.getElementById("gameName").textContent}! &url=https://bg-game-reviews.glitch.me/review?${encode(gameName)}`)'><img src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/X.png" alt="Share"></button><p id="outputSHARE" style="color: green;"></p>
+<button onclick='navigator.share({title: "BG Game Reviews", text: "I have found a cool game! Heres a even cooler review the game called " + document.getElementById("gameName").textContent, url: ""})'><img src="https://reviews.bgmusic.xyz/share.png"></button>
+<button onclick='navigator.clipboard.writeText("https://reviews.bgmusic.xyz/review?" + encode(gameName)).then(() => { document.getElementById("outputSHARE").textContent = "Copied URL to clipboard!"; })'><img src="https://reviews.bgmusic.xyz/link.png" alt="Share"></button>
+<button onclick='window.open(`https://twitter.com/share?lang=en&text=I found a cool review for a game called ${document.getElementById("gameName").textContent}! &url=https://reviews.bgmusic.xyz/review?${encode(gameName)}`)'><img src="https://reviews.bgmusic.xyz/X.png" alt="Share"></button><p id="outputSHARE" style="color: green;"></p>
 </div>
 <hr>
 <h3>Recommended Tools</h3>
