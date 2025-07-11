@@ -1,0 +1,61 @@
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCqptMwVF4BauADLFwj74VEhzceKF-yLGQ",
+  authDomain: "bg-game-reviews-queue.firebaseapp.com",
+  databaseURL: "https://bg-game-reviews-queue-default-rtdb.firebaseio.com",
+  projectId: "bg-game-reviews-queue",
+  storageBucket: "bg-game-reviews-queue.appspot.com",
+  messagingSenderId: "45144526821",
+  appId: "1:45144526821:web:9bcb12620e4f0d5049a90c",
+  measurementId: "G-KH1S8L0RSE"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Create a reference to the Firebase database
+var dbRef = firebase.database();
+var usersRef = dbRef.ref('/');
+
+// Function to generate HTML for a contact
+function contactHtmlFromObject(contact) {
+  // You need to implement this function based on your requirements
+  // This function should return the HTML representation of a contact object
+  // For now, I'll provide a placeholder
+  return "<div>" + contact.name + " - " + contact.link + "</div>";
+}
+
+// Load older contacts as well as any newly added ones
+usersRef.on("child_added", function(snap) {
+  var contactHtml = contactHtmlFromObject(snap.val());
+  $('#modifys').append(contactHtml);
+});
+
+// Save contact
+document.querySelector('.addValue').addEventListener("click", function(event) {
+  event.preventDefault();
+  
+  var game = document.querySelector('#name').value;
+  var newGameData = {
+    game: document.querySelector('#name').value,
+    link: document.querySelector('#link').value,
+    state: "1"
+  };
+  
+  // Reference to the specific game key
+  var gameRef = usersRef.child(game);
+  
+  // Set the name and link under the game key
+  gameRef.set(newGameData, function(error) {
+    if (error) {
+      console.error("Error saving contact:", error);
+    } else {
+      console.log("Contact saved successfully");
+      document.querySelector('#name').value = '';
+      document.querySelector('#link').value = '';
+      document.querySelector('#game').value = '';
+      console.log('We will review your request very soon!');
+    }
+  });
+    window.location = "https://bg-game-reviews.glitch.me/pending/"
+}, false);

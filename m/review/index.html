@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BG Game Reviews / Game Review</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap');
+        * {
+            font-family: 'Prompt', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            white-space: nowrap;
+        }
+        footer {
+            background-color: silver;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .error-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 458px;
+            height: 222px;
+            background-color: white;
+            color: red;
+            font-size: 20px;
+            text-align: center;
+        }
+
+.tooltipa {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+    cursor: help;
+}
+
+.tooltiptexta {
+    visibility: hidden;
+    width: auto;
+    padding: 5px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    
+    position: absolute; /* Changed to absolute */
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    top: calc(50% - 5px - 100%); /* Position 5px above the middle */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.tooltipa:hover .tooltiptexta {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        .module {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 90%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            animation: bounce 0.5s ease;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            cursor: pointer;
+            font-size: 45px;
+            color: red;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            40% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(0.95);
+            }
+        }
+
+        @keyframes zoom-out {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+        }
+
+.module h2 {
+    margin-top: 0;
+    font-size: 20px
+}
+
+.module p {
+    margin-bottom: 0;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #555;
+}
+
+    </style>
+  <div class="header" style="left: 100%; right:100%; top: 4%; height: 70px; background-color: black; color: white; padding-left: 10px; padding-right: 10px; font-family: 'Prompt', sans-serif;">
+    <h3 style="top: 0%; transform: translate(0px, -10px);">
+      <image src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/imageedit_2_8531893643.png?v=1719501775940" width="50px" ></image>
+      <span style="font-size: 40px">|</span><span style="padding-left: 20px"><a href="/m/" style="font-size: 15px">Home</a> <span style="font-size: 15px">> Review > </span><span id="headGameName" style="font-size: 18px">${GAME}</span></span>
+    </h3>
+  </div>
+</head>
+<body>
+<main>
+  
+
+    <button onclick="window.location.href = 'https://bg-game-reviews.glitch.me/m/'">Back</button>
+    <h1 id="loading">LOADING DATA 1/2</h1>
+    <div id="stufftohidewhilstloading" style="display: none">
+
+        <h1>Game Rating for <span id="gameName" style="text-transform: capitalize;"></span></h1>
+        <h2><div id="result"></div></h2>
+        <hr>
+        <h2>Overview:</h2>
+        <h3 id="comment-header">Our Comment: <div id="comment" style="text-indent: 15px;"></div></h3>
+        <hr>
+      <div id="badge-section">
+        <h2>Review Badge:</h2>
+        <p>
+          Every review badge is computer generated on our system using our public api, some displaying errors may occur.
+      </p>
+        <div id="myDiv" style="background-color: #a6a3a2; width: 850px; height: 420px;" hidden>
+            <h1 id="badgeGameName" class="noextend" style="transform: translate(5px, -10px); font-size: 80px"></h1>
+            <h2 id="badgeRating" style="text-align: right; display: block; transform: translate(0px, -30px); background-color: #e0dede; font-size: 80px"></h2>
+            <h3 id="badgeBrand" style="transform: translate(0px, -95px); text-align: center; font-size: 80px">- BG Game Reviews</h3>
+        </div>
+
+        <iframe id="badge" style="background-color: white; width: 360px; height: 168px" frameborder="0" scrolling="no"></iframe>
+        <a id="badgeDownload" hidden>Download badge</a> <a id="badgeView" hidden>View full badge image</a>
+        <br>
+        <span id="download"></span>
+      </div>
+      <div id="rewards-section">
+        <hr>
+        <h2>BG Rewards:</h2>
+        <div id="rewards">
+            <table id="rewardsTable">
+                <thead>
+                <tr>
+                    <th>Reward</th>
+                    <th>Year</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="noRewards" style="display: none;">No Rewards for this game<br></div>
+        </div><br>
+        <span style="font-size: 15px">BG Rewards are awarded to games to help them stand out!</span><br><br></div>
+<div id="store">
+    <h2 id="stores-header">Stores</h2>
+    <table id="storesTable">
+        <thead>
+            <tr>
+                <th>Store</th>
+                <th>Visit</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="noStores" style="display: none;">No Stores available for this game for now.<br></div>
+</div>
+<hr>
+<span style="font-size: 18px" id="yearAdded">This game was added to our database in {YEAR}</span>
+      <br>
+<span style="font-size: 18px" id="yearReleased">This game was released in {YEAR}</span>
+    </div>
+    <br>
+    <br>
+</main>
+<footer>
+    <h4>We do not own any of the game titles featured.</h4>
+    <h5>©® BG Game Reviews</h5>
+</footer>
+
+<script src="/bg-encrpt.js"></script>
+<script>
+var tooltipTriggers = document.querySelectorAll('.tooltip-trigger');
+
+tooltipTriggers.forEach(function(trigger) {
+    trigger.addEventListener('mouseover', function(event) {
+        var tooltip = trigger.nextElementSibling;
+        
+        var triggerRect = trigger.getBoundingClientRect();
+        var tooltipWidth = tooltip.offsetWidth;
+        var tooltipHeight = tooltip.offsetHeight;
+        
+        var tooltipTop = triggerRect.top - tooltipHeight - 5;
+        var tooltipLeft = triggerRect.left + (triggerRect.width - tooltipWidth) / 2;
+        
+        tooltip.style.top = tooltipTop + 'px';
+        tooltip.style.left = tooltipLeft + 'px';
+    });
+});
+
+
+
+
+
+
+
+
+        function openModule(ModuleName, Code, CloseButton) {
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            document.body.appendChild(overlay);
+
+            const module = document.createElement('div');
+            module.className = 'module';
+            
+            module.innerHTML = `<h2>${ModuleName}</h2>${Code}`;
+
+            if (CloseButton) {
+                const closeBtn = document.createElement('span');
+                closeBtn.className = 'close-btn';
+                closeBtn.innerHTML = '&times;';
+        closeBtn.style.fontSize = "45px"
+        closeBtn.style.top = "-10%"
+        closeBtn.style.color = "red"
+                closeBtn.onclick = () => {
+                    module.style.animation = 'zoom-out 0.2s ease forwards';
+                    overlay.style.animation = 'fade-out 0.1s ease forwards';
+                    setTimeout(() => {
+                        document.body.removeChild(overlay);
+                        document.body.removeChild(module);
+                    }, 50);
+                };
+                module.appendChild(closeBtn);
+            }
+
+            document.body.appendChild(module);
+
+            overlay.style.display = 'block';
+            module.style.display = 'block';
+        }
+
+  //openModule("Cookie Notice", "This site uses cookies to increase performance! 🍪", true)
+
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+}
+  
+function imageGenError() {
+        var errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.innerHTML = `Image failed to generate!<br>BG Badge API`
+        iframe.parentNode.replaceChild(errorMessage, iframe);
+}
+
+    var iframe = document.getElementById('badge');
+
+    iframe.onerror = function() {
+        imageGenError()
+    };
+
+    iframe.onload = function() {
+    };
+
+  function rewardPopup(reward, tooltip) {
+    openModule(`${reward}`, `${tooltip}`, true)
+  }
+  
+    const firebaseConfig = {
+        apiKey: "AIzaSyC90VtOE4iyag7QLd42klpqHMWvZAc-MKU",
+        authDomain: "bg-game-reviews.firebaseapp.com",
+        databaseURL: "https://bg-game-reviews-default-rtdb.firebaseio.com",
+        projectId: "bg-game-reviews",
+        storageBucket: "bg-game-reviews.appspot.com",
+        messagingSenderId: "180993970212",
+        appId: "1:180993970212:web:32695b14d68e70f18cc8b1",
+        measurementId: "G-0WMMQBZP5Z"
+    };
+
+    var gameNameFromURL = decodeURIComponent(window.location.hash.substr(1).replaceAll("%20", " "));
+    var gameNameFromURLOLD = decodeURIComponent(window.location.hash.substr(1).replaceAll("%20", " "));
+    var gameName = gameNameFromURL.toLowerCase(); // Convert input to lowercase
+
+  if (isEncoded(gameNameFromURL) === true) {
+    console.log("ENCODED" + decode(gameNameFromURLOLD))
+    gameNameFromURL = decode(gameNameFromURLOLD)
+    gameName = gameNameFromURL.toLowerCase()
+    if (gameNameFromURLOLD === "PCBS") {
+      gameName = "pcbs"
+    }
+  }
+
+
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+    var resultContainer = document.getElementById("result");
+    var commentContainer = document.getElementById("comment");
+    var gameNameElement = document.getElementById("gameName");
+    resultContainer.textContent = "";
+    commentContainer.textContent = "";
+
+    var dataRef = database.ref("/");
+dataRef.once("value")
+    .then(function(snapshot) {
+        var data = snapshot.val();
+        var foundResult = false;
+
+        for (var key in data) {
+            var dbKeyLower = key.toLowerCase();
+            if (gameName === dbKeyLower) {
+                var gameScore = data[key]["score"];
+                resultContainer.textContent = "Overall Rating - " + gameScore + "/20";
+                commentContainer.textContent = `"` + data[key]["comment"] + `"`;
+                document.title = `BG Game Reviews / ${key} Review`;
+                gameNameElement.textContent = key;
+                headGameName.textContent = key;
+                document.getElementById('loading').innerHTML = "LOADING DATA 2/2";
+
+                setTimeout(function() {
+                    var textElement = document.getElementById('loading');
+                    if (textElement.textContent === "LOADING DATA 2/2") {
+                        textElement.textContent = "This is taking much longer than usual, Database seems to be having issues processing this request!";
+                    }
+                }, 10000);
+
+                foundResult = true;
+                var rewardsRef = database.ref("/" + key + "/rewardNames");
+                rewardsRef.once("value")
+                    .then(function(snapshot) {
+                        var rewardsData = snapshot.val();
+                        var rewardsTableBody = document.getElementById("rewardsTable").getElementsByTagName("tbody")[0];
+                        if (rewardsData) {
+                            for (var rewardKey in rewardsData) {
+                                var reward = rewardsData[rewardKey];
+                                var row = rewardsTableBody.insertRow();
+                                var cell1 = row.insertCell(0);
+                                var cell2 = row.insertCell(1);
+                                
+                                if (reward.tooltip) {
+                                    cell1.innerHTML = `<div class="tooltipa" style="color:black;" onclick="rewardPopup('${rewardKey}', '${reward.tooltip}')">${reward.name || rewardKey}
+                                        <span class="tooltiptexta">Tap for info</span>
+                                    </div>`;
+                                } else {
+                                    cell1.textContent = reward.name || rewardKey;
+                                }
+
+                                cell2.textContent = reward.year || "-";
+                            }
+                        } else {
+                            document.getElementById("noRewards").style.display = "block";
+                            document.getElementById("rewardsTable").style.display = "none";
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error("Error fetching rewards:", error);
+                        document.getElementById("rewards").textContent = "Error loading rewards.";
+                    });
+
+                // Fetch store information
+                var storesRef = database.ref("/" + key + "/storeNames");
+                storesRef.once("value")
+                    .then(function(snapshot) {
+                        var storesData = snapshot.val();
+                        var storesTableBody = document.getElementById("storesTable").getElementsByTagName("tbody")[0];
+                        if (storesData) {
+                            for (var storeKey in storesData) {
+                                var store = storesData[storeKey];
+                                var row = storesTableBody.insertRow();
+                                var cell1 = row.insertCell(0);
+                                var cell2 = row.insertCell(1);
+
+                                if (storeKey.toLowerCase() === "steam") {
+                                  cell1.innerHTML = `<div class="tooltipa" style="color:black;" onclick="rewardPopup('${storeKey}', 'Steam is a video game digital distribution service and storefront managed by Valve.')">${store.name || storeKey}
+                                      <span class="tooltiptexta">Tap for info</span>
+                                  </div>`;
+                                } else if (storeKey.toLowerCase() === "epic games store") {
+                                  cell1.innerHTML = `<div class="tooltipa" style="color:black;" onclick="rewardPopup('${storeKey}', 'The Epic Games Store is a video game digital distribution service and storefront operated by Epic Games. It launched in December 2018.')">${store.name || storeKey}
+                                      <span class="tooltiptexta">Tap for info</span>
+                                  </div>`;
+                                } 
+                              else if (storeKey.toLowerCase() === "website") {
+                                  cell1.innerHTML = `<div class="tooltipa" style="color:black;" onclick="rewardPopup('${storeKey}', 'This is an online web game site.')">${store.name || storeKey}
+                                      <span class="tooltiptexta">Tap for info</span>
+                                  </div>`;
+                                } else {
+                                cell1.innerHTML = `<div class="tooltipa" style="color:black; border-bottom: 1px dotted red;" onclick="rewardPopup('${storeKey}', 'No information for ${store.name || storeKey} right now.')">${store.name || storeKey}
+                                      <span class="tooltiptexta">Tap for info</span>
+                                  </div>`;
+                                }
+                                cell2.innerHTML = `<a href="${store.url}" target="_blank">Visit</a>`;
+                            }
+                        } else {
+                            document.getElementById("noStores").style.display = "block";
+                            document.getElementById("storesTable").style.display = "none";
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error("Error fetching stores:", error);
+                        document.getElementById("store").textContent = "Error loading stores.";
+                    });
+
+                document.getElementById('yearAdded').textContent = `This game was added to our database in ${data[key]["yearAdded"]}`;
+                const yearReleasedElement = document.getElementById('yearReleased');
+                const yearReleased = data[key]?.ReleaseYear;
+
+                if (yearReleased !== "") {
+                  yearReleasedElement.textContent = `This game was released in ${yearReleased}`;
+                } else {
+                  yearReleasedElement.style.display = 'none';
+                }
+              if (yearReleased == undefined) {
+                yearReleasedElement.style.display = 'none';
+              }           
+              
+              
+              
+              const badgeElement = document.getElementById('badge');
+
+                              const upcomming = data[key]?.upcomming;
+
+                if (upcomming !== undefined) {
+                  if (upcomming == 'on') {
+                    document.getElementById("rewardsTable").style.display = 'none'
+                    document.getElementById("rewards-section").style.display = 'none'
+                    document.getElementById("badge-section").style.display = 'none'
+                    document.getElementById("comment-header").textContent = `This game is releasing on ${data[key]?.comment}`
+                    document.getElementById("stores-header").textContent = `Stores | Pre-order`
+                    document.getElementById("result").textContent = 'This game is upcomming!'
+                  }
+                }
+              
+                var gameNameCAP = gameName.toUpperCase();
+                badgeElement.src = `/badge-generator?generate=${key},${gameScore}`;
+                setTimeout(function() {
+                    document.getElementById('loading').style.display = "none";
+                    document.getElementById('stufftohidewhilstloading').style.display = "block";
+                }, 200);
+                break;
+            } else {
+            }
+        }
+
+        if (!foundResult) {
+            resultContainer.textContent = "No result found for the specified game name.";
+            document.write('Game is not in our database.<style> body { font-size:30px; text-align: center; }</style>');
+        }
+    })
+    .catch(function(error) {
+        console.error("Error fetching data:", error);
+        document.write("Fatal error loading");
+    });
+
+    $(document).ready(function() {
+        var divWidth = $("#badgeGameName").width();
+        var text = $("#badgeGameName");
+        var fontSize = 80;
+        while (text.width() > divWidth) {
+            text.css("font-size", fontSize -= 0.5);
+        }
+        text.css("display", "inline");
+      
+    });
+</script>
+</body>
+</html>

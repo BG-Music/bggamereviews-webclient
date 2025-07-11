@@ -1,0 +1,231 @@
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<!DOCTYPE html>
+<html>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap');
+        * {
+            font-family: 'Prompt', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 0;
+            padding-bottom: 120px
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-left: 5px;
+            padding: 0;
+            padding-bottom: 120px
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            white-space: nowrap;
+        }
+        footer {
+            background-color: silver;
+            text-align: center;
+
+          padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+      
+      .header {
+        padding-left: 0px;
+        padding: 0px;
+        margin-left: 0px;
+        margin: 0px;
+      }
+
+        .tooltipa {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltiptexta {
+            visibility: hidden;
+            width: 120px;
+            padding: 5px;
+            background-color: black;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            top: calc(50% - 5px - 100%);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 15px
+        }
+
+        .tooltipa:hover .tooltiptexta {
+            visibility: visible;
+            opacity: 1;
+        }
+
+.search-box{
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+}
+    </style>
+
+  <div class="header" style="left: 100%; right:100%; top: 4%; height: 70px; background-color: black; color: white; padding-left: 10px; padding-right: 10px; font-family: 'Prompt', sans-serif;">
+    <h3 style="top: 0%; transform: translate(0px, -10px);">
+      <image src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/imageedit_2_8531893643.png?v=1719501775940" width="50px" ></image>
+      <span style="font-size: 40px">|</span><span style="padding-left: 20px"><a href="/m/">Home</a><span style="font-size: 40px"> | </span>Lite Edition</span>
+    </h3>
+  </div>
+<head>
+<div class="content">
+  
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap');
+        * {
+            font-family: 'Prompt', sans-serif;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BG Game Reviews</title>
+
+    <h1>
+        BG Game Reviews
+    </h1>
+    <span>BG Game Reivews | Game Finder</span>
+    <h2>
+        Reviews:
+    </h2>
+</head>
+
+
+<body>
+    <div>
+          <div class="search-box">
+<input type="text" id="searchInput" placeholder="Search for a game title..." oninput="searchReviews()" class="form-control" style="width: 320px; margin-left:5px; border-radius: 15px;">
+          <button onclick="document.getElementById('searchInput').focus()" style="position: absolute; top: 0px; left: 285px; border-radius: 15px; height: 35px; width: 40px; background-color: inherit; border: 0px">🔍</button>
+      Start typing to start searching...
+      </p>
+    </div>
+
+    <h1 id="data-list">Loading Games...</h1>
+  
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC90VtOE4iyag7QLd42klpqHMWvZAc-MKU",
+            authDomain: "bg-game-reviews.firebaseapp.com",
+            databaseURL: "https://bg-game-reviews-default-rtdb.firebaseio.com",
+            projectId: "bg-game-reviews",
+            storageBucket: "bg-game-reviews.appspot.com",
+            messagingSenderId: "180993970212",
+            appId: "1:180993970212:web:32695b14d68e70f18cc8b1",
+            measurementId: "G-0WMMQBZP5Z"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        var database = firebase.database();
+
+        function fetchDataAndDisplayList() {
+            var dataList = document.getElementById("data-list");
+
+            var dataRef = database.ref("/");
+
+            dataRef.once("value")
+                .then(function (snapshot) {
+                    dataList.innerHTML = ""; 
+                    snapshot.forEach(function (childSnapshot) {
+                        var data = childSnapshot.val();
+                        
+                        var listItem = document.createElement("a");
+                        listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/m/review#" + childSnapshot.key);
+                        if (data.rewardNames) {
+                            listItem.innerHTML = childSnapshot.key + 
+                                "<span> </span><span class='tooltipa'><img src='https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/rewards.png' width='28px'>" +
+                                "<span class='tooltiptexta'>This game has rewards!</span></span><br>";
+                        } else {
+                            listItem.innerHTML = childSnapshot.key + "<br>";
+                        }
+                        dataList.appendChild(listItem);
+                    });
+                })
+                .catch(function (error) {
+                    console.error("Error fetching data:", error);
+                });
+        }
+
+        fetchDataAndDisplayList();
+
+        function searchReviews() {
+            var input = document.getElementById("searchInput").value.toLowerCase();
+            var inputCaps = document.getElementById("searchInput").value;
+            var dataList = document.getElementById("data-list");
+
+            var dataRef = database.ref("/");
+
+            if (input === "") {
+                fetchDataAndDisplayList();
+                return;
+            }
+
+            dataRef.once("value")
+                .then(function (snapshot) {
+                    dataList.innerHTML = `Searching for ${inputCaps}<br>`; 
+                    snapshot.forEach(function (childSnapshot) {
+                        var data = childSnapshot.val();
+                        var gameTitle = childSnapshot.key.toLowerCase();
+
+                        if (gameTitle.includes(input)) {
+                            var listItem = document.createElement("a");
+                            listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/m/review#" + childSnapshot.key);
+                            if (data.rewardNames) {
+                                listItem.innerHTML = `>> ${childSnapshot.key} <span> </span>` + 
+                                    "<span class='tooltipa'><img src='https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/rewards.png' width='28px'>" +
+                                    "<span class='tooltiptexta'>This game has rewards!</span></span><br>";
+                            } else {
+                                listItem.innerHTML = `>> ${childSnapshot.key} <br>`;
+                            }
+                            dataList.appendChild(listItem);
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.error("Error fetching data:", error);
+                });
+        }
+    </script>
+</body>
+</html>
+  </div>
+<footer>
+    <h4>We do not own any of the game titles featured.</h4>
+    <h5>©® BG Game Reviews</h5>
+</footer>

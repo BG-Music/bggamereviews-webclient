@@ -1,0 +1,266 @@
+<style>
+          body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 0;
+            padding-bottom: 120px
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin-left: 5px;
+            padding: 0;
+            padding-bottom: 120px
+        }
+  
+          footer {
+            background-color: silver;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+</style>
+<div class="header" style="left: 100%; right:100%; top: 4%; height: 70px; background-color: black; color: white; padding-left: 10px; padding-right: 10px; font-family: 'Prompt', sans-serif; text-align: left;">
+    <h3 style="top: 0%; transform: translate(0px, -10px);">
+      <image src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/imageedit_2_8531893643.png?v=1719501775940" width="50px" ></image>
+      <span style="font-size: 40px">|</span><span style="padding-left: 20px"><a href="/"style="font-size: 20px">Home</a> <span style="font-size: 20px">> <a href="/submit.htm">Queue Site</a> > </span><span id="headGameName">Game Queue</span>
+    </h3>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BG Game Reviews / Queue</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap');
+        * {
+            font-family: 'Prompt', sans-serif;
+        }
+    </style>
+  
+
+
+
+</head>
+<body>
+  <div id="pageyes">
+
+    <h1>
+        BG Game Reviews
+    </h1>
+    <span>We are a very simple but truthful game rating site.</span>
+  <br>
+  BE WARNED WHEN CLICKING LINKS!
+    <br>
+  <h2><a href="./pending/add">Submit Game</a> <a href="./">Return</a></h2>
+    <h2>Current Queue:</h2>
+    <div id="queue"></div>
+
+<footer>
+    <h4>This website does not own any of the game titles featured.</h4>
+    <h5><a href="/submit.htm">Submit a game</a> | ©® BG Game Reviews</h5>
+    <button style="border: none; background-color: inherit; position: absolute; right:0; top: 0; height: 70px; width: 50px" id="darkModeButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
+  <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+</svg></button>
+</footer>
+
+    <!-- Include the Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-database.js"></script>
+
+  <script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCqptMwVF4BauADLFwj74VEhzceKF-yLGQ",
+  authDomain: "bg-game-reviews-queue.firebaseapp.com",
+  databaseURL: "https://bg-game-reviews-queue-default-rtdb.firebaseio.com",
+  projectId: "bg-game-reviews-queue",
+  storageBucket: "bg-game-reviews-queue.appspot.com",
+  messagingSenderId: "45144526821",
+  appId: "1:45144526821:web:9bcb12620e4f0d5049a90c",
+  measurementId: "G-KH1S8L0RSE"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+var dbRef = firebase.database();
+var usersRef = dbRef.ref();
+
+usersRef.on("child_added", function(snap) {
+  $('#queue').append(contactHtmlFromObject(snap.val()));
+});
+  
+  
+
+
+
+function contactHtmlFromObject(contact){
+  if (contact.state === "1") {
+  var htmlb = '';
+  htmlb += '<div style="text-align: center; background-color: silver; border-radius: 20px; padding: 0.5px;">';
+    htmlb += '<div>';
+      htmlb += '<p class="lead" style="text-transform: capitalize;">' + contact.game + '</a></p>';
+      htmlb += `<p> Link: <a href="${contact.link}">URL</a> | ${contact.link}</p>`;
+      htmlb += '<p> Status: Pending Review</p>';
+    htmlb += '</div>';
+  htmlb += '</div>';
+  htmlb += '<br>';
+  return htmlb;
+} else if (contact.state === "2") { 
+  var htmlb = '';
+  htmlb += '<div style="text-align: center; background-color: silver; border-radius: 20px; padding: 0.5px;">';
+    htmlb += '<div>';
+      htmlb += '<p class="lead" style="text-transform: capitalize;">' + contact.game + '</a></p>';
+      htmlb += `<p> Link: ${contact.link}</p>`;
+      htmlb += '<p> Status: Declined</p>';
+    htmlb += '</div>';
+  htmlb += '</div>';
+  htmlb += '<br>';
+  return htmlb;
+} else if (contact.state === "3") {
+  var htmlb = '';
+  htmlb += '<div style="text-align: center; background-color: silver; border-radius: 20px; padding: 0.5px;">';
+    htmlb += '<div>';
+      htmlb += `<a class="lead" href="/review?${contact.game}" style="text-transform: capitalize;">${contact.game}</a></a>`;
+      htmlb += `<p> Link: <a href="${contact.link}">URL</a> | ${contact.link}</p>`;
+      htmlb += '<p> Status: Approved</p>';
+    htmlb += '</div>';
+  htmlb += '</div>';
+  htmlb += '<br>';
+  return htmlb;
+} else if (contact.state === "4") {
+  console.log("Removed Queue Item")
+}
+  }
+
+</script>
+    
+  </div>
+</body>
+</html>
+
+
+<script>
+var disable = 0
+
+
+if (disable === 1) {
+  
+  document.write('Queue is currently hidden to public! <br> Want to add a game? <a href="/submit.htm">Queue Site</a> <style> body { font-size:30px; text-align: center; }</style>');
+  document.getElementById('pageyes').style.display = "none"
+}
+</script>
+
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${d.toUTCString()}`;
+            document.cookie = `${name}=${value};${expires};path=/`;
+        }
+
+        function applyDarkMode() {
+$(document).ready(function() {
+document.body.style.backgroundColor = "#ababab"
+window.deSelectedColor = "solid 2.5px silver"
+
+
+var SELELE = document.querySelectorAll('th');
+
+SELELE.forEach(function(ele) {
+    ele.style.backgroundColor = '#7c7d7c';
+});
+
+var SELELE = document.querySelectorAll('hr');
+
+SELELE.forEach(function(ele) {
+    ele.style.borderTop = '1px solid #7c7d7c';
+});
+
+var SELELE = document.querySelectorAll('input');
+
+SELELE.forEach(function(ele) {
+    ele.style.backgroundColor = '#d7dbd8';
+});
+
+var SELELE = document.querySelectorAll('a');
+
+SELELE.forEach(function(ele) {
+    ele.style.color = '#9af4fc';
+});
+});
+        }
+
+        function applyLightMode() {
+            document.body.style.backgroundColor = "";
+            window.deSelectedColor = "";
+
+            var SELELE = document.querySelectorAll('th');
+            SELELE.forEach(function(ele) {
+                ele.style.backgroundColor = '';
+            });
+
+            SELELE = document.querySelectorAll('hr');
+            SELELE.forEach(function(ele) {
+                ele.style.borderTop = '';
+            });
+
+            SELELE = document.querySelectorAll('input');
+            SELELE.forEach(function(ele) {
+                ele.style.backgroundColor = '';
+            });
+
+            SELELE = document.querySelectorAll('a');
+            SELELE.forEach(function(ele) {
+                ele.style.color = '';
+            });
+        }
+
+        function toggleDarkMode() {
+            if (getCookie('DarkMode') === 'true') {
+                setCookie('DarkMode', 'false', 7);
+                applyLightMode();
+                document.getElementById('darkModeButton').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
+  <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+</svg>`;
+            } else {
+                setCookie('DarkMode', 'true', 7);
+                applyDarkMode();
+                document.getElementById('darkModeButton').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars-fill" viewBox="0 0 16 16">
+  <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+  <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+</svg>`;
+            }
+        }
+
+        $(document).ready(function() {
+            if (getCookie('DarkMode') === 'true') {
+                applyDarkMode();
+                document.getElementById('darkModeButton').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars-fill" viewBox="0 0 16 16">
+  <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+  <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+</svg>`;
+            } else {
+                document.getElementById('darkModeButton').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
+  <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+</svg>`;
+            }
+
+            document.getElementById('darkModeButton').addEventListener('click', toggleDarkMode);
+        });
+    </script>

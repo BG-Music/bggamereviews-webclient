@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BG Game Reviews / Badge Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap');
+        * {
+            font-family: 'Prompt', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            white-space: nowrap;
+        }
+        footer {
+            background-color: silver;
+            text-align: center;
+            box-shadow: 0px -7px 10px 4px #A5A5A5;
+            padding: 10px 0;
+        }
+        #logo {
+            position: absolute;
+            bottom: -155px;
+            left: 28px;
+            width: 15%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <img id="logo" src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/logo.png?v=1719062261865" alt="Logo" hidden>
+        <div id="myDiv" style="position: relative; background-color: #a6a3a2; width: 2250px; height: 1020px">
+            <h1 id="game" class="noextend" style="transform: translate(5px, -10px); font-size: 200px"></h1>
+            <h2 id="rating" style="text-align: right; display: block; transform: translate(0px, -80px); background-color: #e0dede; font-size: 200px"></h2>
+            <h3 id="brand" style="transform: translate(0px, -260px); text-align: center; font-size: 200px">- BG Game Reviews</h3>
+        </div>
+    </main>
+    <script>
+        $(document).ready(function () {
+
+            var params = new URLSearchParams(window.location.search);
+            var generateParam = params.get('generate');
+          
+          
+            if (generateParam) {
+                var toGenerate = decodeURIComponent(generateParam).split(',');
+                if (toGenerate.length >= 2) {
+                    document.getElementById('game').innerText = toGenerate[0];
+                  if (toGenerate[1] > 20 || toGenerate[1] < 0) {
+                      document.getElementById('rating').innerText = "Rating: ?/20";
+                  } else {
+                      document.getElementById('rating').innerText = "Rating: " + toGenerate[1] + "/20";
+                  }
+
+                    if (toGenerate.length > 2 && toGenerate[2] === "download=true") {
+                        var download = true;
+                    }
+                    if (toGenerate.length > 2 && toGenerate[3].includes("color=") === true) {
+                        background = document.getElementById('myDiv')
+                        lineOne = document.getElementById('game')
+                        lineThree = document.getElementById('brand')
+                        var color = true;
+                        var colorScheme = toGenerate[3].substring(6)
+                    }
+                        if (color) {
+                            if (colorScheme.includes("@") === true) {
+                                colorScheme = colorScheme.replaceAll("@", "#")
+                                background.style.backgroundColor = colorScheme
+                                lineOne.style.backgroundColor = colorScheme
+                                lineThree.style.backgroundColor = colorScheme
+                                } else {
+                                background.style.backgroundColor = colorScheme
+                                lineOne.style.backgroundColor = colorScheme
+                                lineThree.style.backgroundColor = colorScheme
+                                }
+                        }
+
+                    const divElement = document.getElementById('myDiv');
+                    html2canvas(divElement).then(function (canvas) {
+                        const img = new Image();
+                        img.setAttribute("id", "generated");
+                        img.src = canvas.toDataURL();
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = canvas.toDataURL();
+                        downloadLink.download = `GENERATED-${toGenerate[0]}-badge.png`;
+                        downloadLink.textContent = "Download Badge Image";
+                        divElement.parentNode.replaceChild(img, divElement);
+                        img.setAttribute("height", "100%");
+                        img.setAttribute("width", "100%");
+
+                        if (download) {
+                            downloadLink.click();
+                        } else {
+                            document.body.appendChild(downloadLink);
+                        }
+                    }).catch(function (error) {
+                        console.error("html2canvas error:", error);
+                    });
+                } else {
+                    console.error("Invalid generate parameter");
+                }
+            } else {
+                console.error("Missing generate parameter");
+            }
+        });
+    </script>
+</body>
+</html>

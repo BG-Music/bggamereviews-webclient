@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html id="ALLCONTENTONSITE">
+<head>
+    <title>BG Game Reviews / Game Review</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap');
+        * {
+            font-family: 'Prompt', sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            white-space: nowrap;
+        }
+        footer {
+            background-color: silver;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .error-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 458px;
+            height: 222px;
+            background-color: white;
+            color: red;
+            font-size: 20px;
+            text-align: center;
+        }
+
+.tooltipa {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+    cursor: help;
+}
+
+.tooltiptexta {
+    visibility: hidden;
+    width: auto;
+    padding: 5px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    top: calc(50% - 5px - 100%);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.tooltipa:hover .tooltiptexta {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.module {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+}
+
+.module h2 {
+    margin-top: 0;
+}
+
+.module p {
+    margin-bottom: 0;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #555;
+}
+
+      .share-btns button {
+        border: none;
+        height: 40px;
+        width: 40px;
+      }
+
+      .share-btns button:hover img {
+        filter: invert(0.5);
+      }
+
+      .share-btns img {
+        border: none;
+        height: 25px;
+      }
+
+      .BadgeColorPicker button {
+        border: none;
+        height: 40px;
+        width: 40px;
+        border-radius: 50px;
+
+      }
+
+.BadgeColorPicker input[type="text"]:focus{
+    outline: none;
+}
+
+.BadgeColorPicker input[type="text"]{
+    border: none;
+    border-color: transparent;
+}
+      
+      hr {
+        margin-left: 2%;
+        margin-right: 2%;
+      }
+    </style>
+  <div class="header" style="left: 100%; right:100%; top: 4%; height: 70px; background-color: black; color: white; padding-left: 10px; padding-right: 10px; font-family: 'Prompt', sans-serif;">
+    <h3 style="top: 0%; transform: translate(0px, -10px);">
+      <image src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/imageedit_2_8531893643.png?v=1719501775940" width="50px" ></image>
+      <span style="font-size: 40px">|</span><span style="padding-left: 20px"><a href="/" style="font-size: 20px">Home</a> <span style="font-size: 20px">> Review > </span><span id="headGameName">${GAME}</span></span>
+    </h3>
+  </div>
+  
+</head>
+<body>
+    <div id="New30Web" style="left: 100%; right: 100%; background-color: #91b4ed; text-align: center; font-size: 25px; border-style: inset; border-color: #7aa3e6; margin-top:1px"><button style = "border: none; background-color: #91b4ed; left: 3px; position: absolute" onClick="document.getElementById('New30Web').style.display = 'none'">x</button><b>Welcome to Web 2.0!</b><br>
+    <span style="font-size: 22px; ">This is still in beta and is more immersive than ever!<br></span>
+  </div>
+      <div id="Beta" style="left: 100%; right: 100%; background-color: #f0692b; text-align: center; font-size: 25px; border-style: inset; border-color: #f25c16; margin-top:1px; display: none"><button style = "border: none; background-color: #f0692b; left: 3px; position: absolute" onClick="document.getElementById('Beta').style.display = 'none'">x</button><b>Early Access</b><br>
+        <span style="font-size: 22px; ">This game is in early access! Review may change overtime.<br></span>
+  </div>
+        <div id="Horriblegame" style="left: 100%; right: 100%; background-color: #cf3636; text-align: center; font-size: 25px; border-style: inset; border-color: #ed1a1a; margin-top:1px; display: none"><button style = "border: none; background-color: #cf3636; left: 3px; position: absolute" onClick="document.getElementById('Horriblegame').style.display = 'none'">x</button><b>Horrible Game Ahead</b><br>
+        <span style="font-size: 22px; ">This game has a score that is below 5, we highly recommend not buying this game at full price.<br></span>
+  </div>
+<main style = "padding-left:20%; padding-right:20%; text-align: center;">
+  <div style = "background-color: #b5b5b5; padding-left: 2%; padding-right: 2%; border-radius: 5px">
+    
+
+<br>
+    <button onclick="history.back()">Back</button>
+    <h1 id="loading">LOADING DATA 1/2</h1>
+    <div id="stufftohidewhilstloading" style="display: none">
+
+        <h1>Game Rating for <span id="gameName" style="text-transform: capitalize;"></span></h1>
+        <h2><div id="result"></div></h2>
+        <hr><div id="trailerarea">
+      <h3>
+        Game Trailer
+      </h3>
+      <iframe style="border-radius: 15px;" id="trailervideo" width="560" height="315" src="https://www.youtube.com/embed/" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope;" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div> 
+      <h2>Overview:</h2>
+      <div id="comment-section"><h3 id="comment-header">Our Comment: <div id="comment" style="text-indent: 15px; margin-right: 25%; margin-left: 25%; "></div></h3></div>
+      <a id="gameSite" href="https://example.com" style="font-size: 25px" target="_new">Game Website</a>
+        <hr>
+      <div id="badge-section">
+
+        <h2>Review Badge:</h2>
+        <p>
+          Every review badge is computer generated on our system using our public api, some displaying errors may occur.<br>Feel free to use this image on your page.
+      </p>
+        <div id="myDiv" style="background-color: #a6a3a2; width: 850px; height: 420px;" hidden>
+            <h1 id="badgeGameName" class="noextend" style="transform: translate(5px, -10px); font-size: 80px"></h1>
+            <h2 id="badgeRating" style="text-align: right; display: block; transform: translate(0px, -30px); background-color: #e0dede; font-size: 80px"></h2>
+            <h3 id="badgeBrand" style="transform: translate(0px, -95px); text-align: center; font-size: 80px">- BG Game Reviews</h3>
+        </div>
+
+        <iframe id="badge" style="background-color: inherit; width: 360px; height: 168px; overflow-x: auto; white-space: nowrap;" frameborder="0" scrolling="no"></iframe>
+        <br>
+
+<script>
+selectedColor = "solid 2.5px blue"
+deSelectedColor = "solid 2.5px gray"
+
+function clearOptions() {
+  optionONE = document.getElementById('colorOPONE')
+  optionTWO = document.getElementById('colorOPTWO')
+  optionTHREE = document.getElementById('colorOPTHREE')
+  optionFOUR = document.getElementById('colorOPFOUR')
+  optionCUSTOM = document.getElementById('colorOPCUSTOM')
+
+
+optionONE.style.border = deSelectedColor
+optionTWO.style.border = deSelectedColor
+optionTHREE.style.border = deSelectedColor
+optionFOUR.style.border = deSelectedColor
+optionCUSTOM.style.border = deSelectedColor
+}
+
+    $(document).ready(function() {
+      clearOptions()
+      optionONE.style.border = selectedColor
+    });
+</script>
+      <div id="badgeColorPicker" class="BadgeColorPicker" style="padding-left:20px;">
+        <button style="background-color: #a6a3a2; font-size:25px" onclick="changeBadgeColor('a6a3a2'); clearOptions(); this.style.border=selectedColor" id="colorOPONE">1</button>
+        <button style="background-color: #d6d5d4; font-size:25px" onclick="changeBadgeColor('d6d5d4'); clearOptions(); this.style.border=selectedColor" id="colorOPTWO">2</button>
+        <button style="background-color: #fab673; font-size:25px" onclick="changeBadgeColor('fab673'); clearOptions(); this.style.border=selectedColor;" id="colorOPTHREE">3</button>
+        <button style="background-color: #ebae34; font-size:25px" onclick="changeBadgeColor('ebae34'); clearOptions(); this.style.border=selectedColor;" id="colorOPFOUR">4</button>
+        <button style="background-color: #ffff; font-size:25px; display: inline-block" onclick="document.getElementById('customCOLOR').click(); clearOptions(); this.style.border=selectedColor; changeBadgeColor(document.getElementById('customCOLOR').value.substr(1));
+" id="colorOPCUSTOM">+<input type="color" style="width:20px; border: none; background-color: none;" id="customCOLOR" value="#ffffff" hidden></button>
+      </div>
+
+
+        <br>
+        <a id="badgeDownload">Download badge</a> |  <a id="badgeView">View full badge image</a>
+        <br>
+        <span id="download"></span>
+        <hr>
+        </div>
+
+      <div id="rewards-section">
+        
+        <h2>BG Rewards:</h2>
+        <div id="rewards">
+            <table id="rewardsTable">
+                <thead>
+                <tr>
+                    <th style = "background-color: #7a7a7a">Reward</th>
+                    <th style = "background-color: #7a7a7a">Year</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="noRewards" style="display: none;">No Rewards for this game<br></div>
+        </div>
+<br>
+        <span style="font-size: 15px">BG Rewards are awarded to games to help them stand out!</span><br>
+      <hr>
+                      </div>
+<div id="store">
+    <h2 id="stores-header">Stores</h2>
+    <table id="storesTable">
+        <thead>
+            <tr>
+                <th style = "background-color: #7a7a7a">Store</th>
+                <th style = "background-color: #7a7a7a">Store URL</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="noStores" style="display: none;">No Stores available for this game for now.<br></div>
+</div>
+<hr>
+<span style="font-size: 18px" id="yearAdded">This game was added to our database in {YEAR}</span>
+      <br>
+<span style="font-size: 18px" id="yearReleased">This game was released in {YEAR}</span>
+      <span style="font-size: 18px" id="gameNameUNCAPPED" hidden></span>
+<hr>
+<h3>Share this page</h3>
+<div class="share-btns">
+<button onclick='navigator.share({title: "BG Game Reviews", text: "I have found a cool game! Heres a even cooler review the game called " + document.getElementById("gameName").textContent, url: ""})'><img src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/share.png"></button>
+<button onclick='navigator.clipboard.writeText("https://bg-game-reviews.glitch.me/review?" + encode(gameName)).then(() => { document.getElementById("outputSHARE").textContent = "Copied URL to clipboard!"; })'><img src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/link.png" alt="Share"></button>
+<button onclick='window.open(`https://twitter.com/share?lang=en&text=I found a cool review for a game called ${document.getElementById("gameName").textContent}! &url=https://bg-game-reviews.glitch.me/review?${encode(gameName)}`)'><img src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/X.png" alt="Share"></button><p id="outputSHARE" style="color: green;"></p>
+</div>
+<hr>
+<h3>Recommended Tools</h3>
+  <span style="font-size:12px">We arn't affiliated with any of these but we have found them useful for people and we love them!</span>
+<div style="display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: auto; font-family: Arial, sans-serif;">
+  
+  <div style="display: flex; align-items: center; border: 2px solid #ddd; padding: 15px; border-radius: 10px; background-color: #cccccc; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
+    
+    <div style="width: 290px; height: 100px; background-color: #f9f9f9; border: 2px solid black; display: flex; justify-content: center; align-items: center; color: red; font-size: 14px; border-radius: 5px;">
+      <img src="https://pbs.twimg.com/profile_images/464113376881176576/u3LAPZok_400x400.png" width="100%" height="100%">
+    </div>
+    
+    <div style="flex-grow: 1; padding: 0 20px; color: #333;">
+      <strong style="font-size: 16px;">Can I Run It?</strong>  
+      <p style="margin: 5px 0; font-size: 14px;">Can I Run It? is an amazing tool by <a href="https://www.systemrequirementslab.com/">systemrequirementslab</a> which provides you with information on games to see if your pc is able to run them or not and provide computers which can run all popular games! It can also recommend computers for you.</p>
+    </div>
+    
+    <a href="https://www.systemrequirementslab.com/cyri/" target="_new" style="padding: 8px 16px; background-color: blue; color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);">
+      Visit
+    </a>
+  
+  </div>
+<br>
+</div>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: auto; font-family: Arial, sans-serif;">
+  
+  <div style="display: flex; align-items: center; border: 2px solid #ddd; padding: 15px; border-radius: 10px; background-color: #cccccc; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
+    
+    <div style="width: 120px; height: 100px; background-color: #f9f9f9; border: 2px solid black; display: flex; justify-content: center; align-items: center; color: red; font-size: 14px; border-radius: 5px;">
+      <img src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/logo.png" width="100%" height="100%">
+    </div>
+    
+    <div style="flex-grow: 1; padding: 0 20px; color: #333;">
+      <strong style="font-size: 16px">BG Labs | Monitor Benchmark</strong>  
+      <p style="margin: 5px 0; font-size: 14px;">A simple tool by <a href="https://www.bgmusic.xyz/">BG Music</a> Which provides a point-like beanchmarks for monitors completely online</p>
+    </div>
+    
+    <a href="https://bgmusic.xyz/labs/monitor-benchmark/" target="_new" style="padding: 8px 16px; background-color: blue; color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);">
+      Visit
+    </a>
+  
+  </div>
+<br>
+</div>
+      
+      
+            <div style="display: flex; flex-direction: column; gap: 10px; max-width: 800px; margin: auto; font-family: Arial, sans-serif;">
+  
+  <div style="display: flex; align-items: center; border: 2px solid #ddd; padding: 15px; border-radius: 10px; background-color: #cccccc; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);">
+    
+    <div style="width: 100px; height: 100px; background-color: #f9f9f9; border: 2px solid black; display: flex; justify-content: center; align-items: center; color: red; font-size: 14px; border-radius: 5px;">
+      <img src="https://cdn.glitch.global/62b6a6aa-c3de-4ceb-a2d8-2f0549fae9e6/BG%20Review%20Gray.png?v=1719061518966" width="100%" height="100%">
+    </div>
+    
+    <div style="flex-grow: 1; padding: 0 20px; color: #333;">
+      <strong style="font-size: 16px">BG Game Reviews | Full Database</strong>  
+      <p style="margin: 5px 0; font-size: 14px;">View all the games that have been reviewed by BG Game Reviews in one place.</p>
+    </div>
+    
+    <a href="https://bg-game-reviews.glitch.me/database.html" target="_new" style="padding: 8px 16px; background-color: blue; color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: bold; box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);">
+      Visit
+    </a>
+  
+  </div>
+<br>
+</div>
+      
+      
+
+  </div>
+</div>
+    <br>
+    <br>
+</main>
+<footer>
+    <h4>This website does not own any of the game titles featured.</h4>
+    <h5><a href="/submit.htm">Submit a game</a> | ©® BG Game Reviews</h5>
+    <button style="border: none; background-color: inherit; position: absolute; right:0; top: 0; height: 70px; width: 50px" id="darkModeButton"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
+  <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+</svg></button>
+</footer>
+</html>
+<script src="/bg-encrpt.js"></script>
+<script>
+  
+                      document.getElementById("Beta").style.display = 'none'
+                        document.getElementById("Horriblegame").style.display = 'none'
+
+
+  
+  function getBaseUrl(url) {
+    let parsedUrl = new URL(url);
+    return `${parsedUrl.protocol}//${parsedUrl.hostname}`;
+}
+
+
+  
+var tooltipTriggers = document.querySelectorAll('.tooltip-trigger');
+
+tooltipTriggers.forEach(function(trigger) {
+    trigger.addEventListener('mouseover', function(event) {
+        var tooltip = trigger.nextElementSibling;
+        
+        var triggerRect = trigger.getBoundingClientRect();
+        var tooltipWidth = tooltip.offsetWidth;
+        var tooltipHeight = tooltip.offsetHeight;
+        
+        var tooltipTop = triggerRect.top - tooltipHeight - 5;
+        var tooltipLeft = triggerRect.left + (triggerRect.width - tooltipWidth) / 2;
+        
+        tooltip.style.top = tooltipTop + 'px';
+        tooltip.style.left = tooltipLeft + 'px';
+    });
+});
+
+
+
+
+
+
+
+
+function openModule(ModuleName, Code, CloseButton, AiGenerated, aiPreview) {
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    document.body.appendChild(overlay);
+
+    const module = document.createElement('div');
+    module.className = 'module';
+    
+    module.innerHTML = `<h2>${ModuleName}</h2>${Code}`;
+
+    if (CloseButton) {
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'close-btn';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.style.fontSize = "45px"
+        closeBtn.style.top = "-10%"
+        closeBtn.style.color = "red"
+        closeBtn.onclick = () => {
+            document.body.removeChild(overlay);
+            document.body.removeChild(module);
+        };
+        module.appendChild(closeBtn);
+    }
+  if (AiGenerated) {
+        const aiText = document.createElement('span');
+        aiText.className = 'ai-span';
+        aiText.innerHTML = 'AI';
+        aiText.style.fontSize = "13px";
+        aiText.style.top = "-10%";
+        aiText.style.color = "white";
+        aiText.style.borderStyle = "solid";
+        aiText.style.borderColor = "mediumseagreen";
+        aiText.style.borderRadius = "5px";
+        aiText.style.background = "green";
+        aiText.style.marginLeft = "10px";
+        aiText.style.width = "40px";
+        aiText.style.display = "inline-block";
+        aiText.style.paddingLeft = "10px";
+        aiText.style.borderWidth = "2px";
+        aiText.style.fontWeight = "bold";
+        aiText.style.height = "22px";
+        if (aiPreview != true) {
+          aiText.style.cursor = "pointer"
+          aiText.onclick = () => {
+            openModule("BG AI", "This summary was AI generated by BG AI. <br>These summaries are auto generated every few months, <b>information may be outdated</b>.<br>Information generated by AI is identified with this badge: ", true, true, true)
+        };}
+        module.appendChild(aiText);
+  }
+
+    document.body.appendChild(module);
+
+    overlay.style.display = 'block';
+    module.style.display = 'block';
+}
+
+  //openModule("Cookie Notice", "This site uses cookies to increase performance! 🍪", true)
+
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  openModule("Warning", "We highly reccomend using a desktop device for this site!<br>Some features may not function on the mobile web version. <a href='/m/'>Or switch to the mobile site</a>", true)
+}
+  
+function imageGenError() {
+        var errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.innerHTML = `Image failed to generate!<br>BG Badge API`
+        iframe.parentNode.replaceChild(errorMessage, iframe);
+}
+
+    var iframe = document.getElementById('badge');
+
+    iframe.onerror = function() {
+        imageGenError()
+    };
+
+    iframe.onload = function() {
+    };
+
+  function rewardPopup(reward, tooltip) {
+    openModule(`${reward}`, `${tooltip} <br> <span style="font-size: 8px">BG AI</span> |`, true, true)
+  }
+  
+    function rewardPopupReward(reward, tooltip) {
+    openModule(`${reward}`, `${tooltip}`, true)
+  }
+  
+    const firebaseConfig = {
+        apiKey: "AIzaSyC90VtOE4iyag7QLd42klpqHMWvZAc-MKU",
+        authDomain: "bg-game-reviews.firebaseapp.com",
+        databaseURL: "https://bg-game-reviews-default-rtdb.firebaseio.com",
+        projectId: "bg-game-reviews",
+        storageBucket: "bg-game-reviews.appspot.com",
+        messagingSenderId: "180993970212",
+        appId: "1:180993970212:web:32695b14d68e70f18cc8b1",
+        measurementId: "G-0WMMQBZP5Z"
+    };
+
+    var gameNameFromURL = decodeURIComponent(window.location.search.substr(1).replaceAll("%20", " "));
+    var gameNameFromURLOLD = decodeURIComponent(window.location.search.substr(1).replaceAll("%20", " "));
+    var gameName = gameNameFromURL.toLowerCase(); // Convert input to lowercase
+    window.badgeColor = "a6a3a2"
+  if (isEncoded(gameNameFromURL) === true) {
+    console.log("ENCODED")
+    gameNameFromURL = decode(gameNameFromURLOLD)
+    gameName = gameNameFromURL.toLowerCase()
+  } else {
+    window.location = `https://bg-game-reviews.glitch.me/review?${encode(gameName)}`
+  }
+
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+    var resultContainer = document.getElementById("result");
+    var commentContainer = document.getElementById("comment");
+    var gameNameElement = document.getElementById("gameName");
+
+    resultContainer.textContent = "";
+    commentContainer.textContent = "";
+
+    var dataRef = database.ref("/");
+dataRef.once("value")
+    .then(function(snapshot) {
+        var data = snapshot.val();
+        var foundResult = false;
+
+        for (var key in data) {
+            var dbKeyLower = key.toLowerCase();
+            if (gameName === dbKeyLower) {
+
+                var gameScore = data[key]["score"];
+              if (gameScore <= 5) {
+                                      document.getElementById("Horriblegame").style.display = 'block'
+
+              }
+              
+                resultContainer.textContent = "Overall Rating - " + gameScore + "/20";
+                commentContainer.textContent = `"` + data[key]["comment"] + `"`;
+                if (data[key]["WebsiteURL"] !== "" && data[key]["WebsiteURL"] !== "undefined") {
+                    document.getElementById('gameSite').href = data[key]["WebsiteURL"];
+                  document.getElementById('gameSite').textContent = key + "'s Website"
+                } else {
+                  document.getElementById('gameSite').style.display = "none"
+                }
+
+
+              
+                document.title = `BG Game Reviews / ${key} Review`;
+                document.getElementById("gameName").textContent = key
+                gameNameElement.textContent = key;
+                headGameName.textContent = key;
+                document.getElementById('loading').innerHTML = "BUILDING DATA 2/2";
+                window.globalKey = key;
+                window.globalScore = gameScore;
+
+
+
+                setTimeout(function() {
+                    var textElement = document.getElementById('loading');
+                    if (textElement.textContent === "BUILDING DATA 2/2") {
+                        textElement.textContent = "This is taking much longer than usual, Database seems to be having issues processing this request!";
+                    }
+                }, 10000);
+
+                foundResult = true;
+                var rewardsRef = database.ref("/" + key + "/rewardNames");
+                rewardsRef.once("value")
+                    .then(function(snapshot) {
+                        var rewardsData = snapshot.val();
+                        var rewardsTableBody = document.getElementById("rewardsTable").getElementsByTagName("tbody")[0];
+                        if (rewardsData) {
+                            for (var rewardKey in rewardsData) {
+                                var reward = rewardsData[rewardKey];
+                                var row = rewardsTableBody.insertRow();
+                                var cell1 = row.insertCell(0);
+                                var cell2 = row.insertCell(1);
+                                
+                                console.log('Reward:', reward);
+                                console.log('Reward Key:', rewardKey);
+                                if (reward.tooltip) {
+                                    cell1.innerHTML = `<div class="tooltipa" style="color:black;" onclick="rewardPopupReward('${rewardKey}', '${reward.tooltip}')">${reward.name || rewardKey}
+                                        <span class="tooltiptexta">${reward.tooltip}</span>
+                                    </div>`;
+                                } else {
+                                    cell1.textContent = reward.name || rewardKey;
+                                }
+
+                                cell2.textContent = reward.year || "-";
+                            }
+                        } else {
+                            document.getElementById("noRewards").style.display = "block";
+                            document.getElementById("rewardsTable").style.display = "none";
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error("Error fetching rewards:", error);
+                        document.getElementById("rewards").textContent = "Error loading rewards.";
+                    });
+
+                // Fetch store information
+                var storesRef = database.ref("/" + key + "/storeNames");
+                storesRef.once("value")
+                    .then(function(snapshot) {
+                        var storesData = snapshot.val();
+                        var storesTableBody = document.getElementById("storesTable").getElementsByTagName("tbody")[0];
+                        if (storesData) {
+                            for (var storeKey in storesData) {
+                                var store = storesData[storeKey];
+                                var row = storesTableBody.insertRow();
+                                var cell1 = row.insertCell(0);
+                                var cell2 = row.insertCell(1);
+
+                                if (storeKey.toLowerCase() === "steam") {
+                                  cell1.innerHTML = `<div class="tooltipa" style="color:black;" onclick="rewardPopup('${storeKey} Information', 'Steam is a video game digital distribution service and storefront managed by Valve.')">${store.name || storeKey}
+                                      <span class="tooltiptexta">${store.name || storeKey} Info</span>
+                                  </div>`;
+                                } else if (storeKey.toLowerCase() === "epic games store") {
+                                  cell1.innerHTML = `<div class="tooltipa" style="color:black;" onclick="rewardPopup('${storeKey} Information', 'The Epic Games Store is a video game digital distribution service and storefront operated by Epic Games. It launched in December 2018.')">${store.name || storeKey}
+                                      <span class="tooltiptexta">${store.name || storeKey} Info</span>
+                                  </div>`;
+                                }
+                               else if (storeKey.toLowerCase() === "website") {
+                                  cell1.innerHTML = `<div class="tooltipa" style="color:black;" onclick="rewardPopup('${storeKey} Information', 'This is an online web game site.')">${store.name || storeKey}
+                                      <span class="tooltiptexta">${store.name || storeKey} Info</span>
+                                  </div>`;
+                                } else {
+                                cell1.innerHTML = `<div class="tooltipa" style="color:black; border-bottom: 1px dotted red;" onclick="rewardPopup('${storeKey}', 'No information for ${store.name || storeKey} right now.')">${store.name || storeKey}
+                                      <span class="tooltiptexta">No Info</span>
+                                  </div>`;
+                                }
+                                cell2.innerHTML = `<a href="${store.url}" target="_blank">${getBaseUrl(store.url)}</a>`;
+                            }
+                        } else {
+                            document.getElementById("noStores").style.display = "block";
+                            document.getElementById("storesTable").style.display = "none";
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error("Error fetching stores:", error);
+                        document.getElementById("store").textContent = "Error loading stores.";
+                    });
+
+                document.getElementById('yearAdded').textContent = `This game was added to our database in ${data[key]["yearAdded"]}`;
+                const yearReleasedElement = document.getElementById('yearReleased');
+                const yearReleased = data[key]?.ReleaseYear;
+              const trailerVideo = data[key]?.TrailerVideo;
+
+                if (yearReleased !== "") {
+                  yearReleasedElement.textContent = `This game was released in ${yearReleased}`;
+                } else {
+                  yearReleasedElement.style.display = 'none';
+                }
+              if (yearReleased == undefined) {
+                yearReleasedElement.style.display = 'none';
+              }
+
+              if (trailerVideo !== "") {
+                document.getElementById('trailervideo').src = `https://www.youtube.com/embed/${trailerVideo}`;
+                } else {
+                  document.getElementById('trailerarea').style.display = 'none';
+                }
+              
+              if (trailerVideo == undefined) {
+                document.getElementById('trailerarea').style.display = 'none';
+              }
+              
+                const upcomming = data[key]?.upcomming;
+
+                if (upcomming !== undefined) {
+                  if (upcomming == 'on') {
+                    document.getElementById("rewardsTable").style.display = 'none'
+                    document.getElementById("rewards-section").style.display = 'none'
+                    document.getElementById("badge-section").style.display = 'none'
+                    document.getElementById("comment-header").textContent = `This game is releasing on ${data[key]?.comment}`
+                    document.getElementById("stores-header").textContent = `Stores | Pre-order`
+                    document.getElementById("result").textContent = 'This game is upcomming!'
+                    document.getElementById("Horriblegame").style.display = 'none'
+                  }
+                }
+              
+                const earlyAccess = data[key]?.earlyAccess;
+
+                if (earlyAccess !== undefined) {
+                  if (earlyAccess == 'on') {
+                    document.getElementById("Beta").style.display = 'block'
+                  }
+                }
+              
+              
+                const badgeElement = document.getElementById('badge');
+                const badgeDownloadElement = document.getElementById('badgeDownload');
+                badgeDownloadElement.href = `#${gameName}`;
+                var gameNameCAP = gameName.toUpperCase();
+                function downloadBadge() {
+                    window.open(`/badge-generator?generate=${gameNameCAP},${gameScore},download=true,color=@${badgeColor}`);
+                }
+
+                badgeDownloadElement.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    downloadBadge();
+                });
+
+                const badgeViewElement = document.getElementById('badgeView');
+                badgeViewElement.href = `#${gameName}`;
+                function viewBadge() {
+                    window.open(`/badge-generator?generate=${key},${gameScore},download=false,color=@${badgeColor}`);
+                }
+
+                badgeViewElement.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    viewBadge();
+                });
+
+                badgeElement.src = `/badge-generator?generate=${key},${gameScore}`;
+                setTimeout(function() {
+                    document.getElementById('loading').style.display = "none";
+                    document.getElementById('stufftohidewhilstloading').style.display = "block";
+                }, 200);
+                break;
+            } else {
+                console.log("No match found for: " + gameName + ". Current key: " + key);
+            }
+        }
+
+        if (!foundResult) {
+            resultContainer.textContent = "No result found for the specified game name.";
+            document.write('Game is not in our database <br> But it could be! <a href="/submit.htm">Queue Site</a><br><br><a href="/search">Or use our new search tool!</a> <style> body { font-size:30px; text-align: center; }</style>');
+        }
+    $(document).ready(function() {
+      clearOptions()
+      optionONE.style.border = selectedColor
+      
+       if (getCookie('DarkMode') === 'true') {
+         clearOptions()
+         optionTWO.click()
+       } else {
+         
+       }
+    });
+    })
+    .catch(function(error) {
+        console.error("Error fetching data:", error);
+        document.write("Fatal error loading");
+    });
+
+
+    $(document).ready(function() {
+        var divWidth = $("#badgeGameName").width();
+        var text = $("#badgeGameName");
+        var fontSize = 80;
+        while (text.width() > divWidth) {
+            text.css("font-size", fontSize -= 0.5);
+        }
+        text.css("display", "inline");
+      
+    });
+  
+  function InvolenturyFail(){
+    document.write('Game is not in our database <br> But it could be! <a href="/submit.htm">Queue Site</a><br><br><a href="/search">Or use our new search tool!</a><style> body { font-size:30px; text-align: center; }</style>');
+  }
+
+document.getElementById("customCOLOR").addEventListener("change", onChangeColor);
+
+function onChangeColor() {
+
+   console.log(this.value);
+   changeBadgeColor(this.value.substr(1))
+   document.getElementById('colorOPCUSTOM').style.backgroundColor = this.value
+
+}
+
+function changeBadgeColor(color) {
+  const badgeElement = document.getElementById('badge');
+  badgeElement.src = `/badge-generator?generate=${globalKey},${globalScore},download=false,color=@${color}`;
+  window.badgeColor = color
+}
+
+
+</script>
+  
+</body>
+
+
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${d.toUTCString()}`;
+            document.cookie = `${name}=${value};${expires};path=/`;
+        }
+
+        function applyDarkMode() {
+$(document).ready(function() {
+document.body.style.backgroundColor = "#ababab"
+window.deSelectedColor = "solid 2.5px silver"
+
+
+var SELELE = document.querySelectorAll('th');
+
+SELELE.forEach(function(ele) {
+    ele.style.backgroundColor = '#7c7d7c';
+});
+
+var SELELE = document.querySelectorAll('hr');
+
+SELELE.forEach(function(ele) {
+    ele.style.borderTop = '1px solid #7c7d7c';
+});
+
+var SELELE = document.querySelectorAll('input');
+
+SELELE.forEach(function(ele) {
+    ele.style.backgroundColor = '#d7dbd8';
+});
+
+var SELELE = document.querySelectorAll('a');
+
+
+
+document.getElementById('colorOPTWO').click()
+});
+        }
+
+        function applyLightMode() {
+            document.body.style.backgroundColor = "";
+            window.deSelectedColor = "";
+
+            var SELELE = document.querySelectorAll('th');
+            SELELE.forEach(function(ele) {
+                ele.style.backgroundColor = '#7a7a7a';
+            });
+
+            SELELE = document.querySelectorAll('hr');
+            SELELE.forEach(function(ele) {
+                ele.style.borderTop = '';
+            });
+
+            SELELE = document.querySelectorAll('input');
+            SELELE.forEach(function(ele) {
+                ele.style.backgroundColor = '';
+            });
+
+
+        }
+
+        function toggleDarkMode() {
+            if (getCookie('DarkMode') === 'true') {
+                setCookie('DarkMode', 'false', 7);
+                applyLightMode();
+                document.getElementById('darkModeButton').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
+  <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+</svg>`;
+            } else {
+                setCookie('DarkMode', 'true', 7);
+                applyDarkMode();
+                document.getElementById('darkModeButton').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars-fill" viewBox="0 0 16 16">
+  <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+  <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+</svg>`;
+            }
+        }
+
+        $(document).ready(function() {
+            if (getCookie('DarkMode') === 'true') {
+                applyDarkMode();
+                document.getElementById('darkModeButton').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars-fill" viewBox="0 0 16 16">
+  <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+  <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+</svg>`;
+            } else {
+                document.getElementById('darkModeButton').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-brightness-high-fill" viewBox="0 0 16 16">
+  <path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+</svg>`;
+            }
+
+            document.getElementById('darkModeButton').addEventListener('click', toggleDarkMode);
+        });
+    </script>

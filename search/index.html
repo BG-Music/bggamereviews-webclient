@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Search</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        .search-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 40%;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            position: absolute;
+        }
+        button {
+            padding: 10px;
+            width: 40px;
+            font-size: 16px;
+            right: 27%;
+            position: absolute;
+            background-color: white;
+            color: white;
+            cursor: pointer;
+            filter: brightness(1);
+            border: 2px solid #ccc;
+            border-radius: 4px;
+        }
+        button:hover {
+            filter: brightness(0.5);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        .module {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 90%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            animation: bounce 0.5s ease;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            cursor: pointer;
+            font-size: 45px;
+            color: red;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            40% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(0.95);
+            }
+        }
+
+        @keyframes zoom-out {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Game Finder</h1>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter game name">
+            <button onclick="searchGame()">🔍</button>
+        </div>
+    </div>
+
+<script src="/bg-encrpt.js"></script>
+    <script>
+        function searchGame() {
+            const input = document.getElementById('searchInput').value;
+            const encodedInput = encode(input);
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            window.location.href = `https://bg-game-reviews.glitch.me/m/review#${encodedInput}`;
+} else {
+            window.location.href = `https://bg-game-reviews.glitch.me/review?${encodedInput}`;
+  
+}
+        }
+    </script>
+</body>
+</html>
