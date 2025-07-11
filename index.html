@@ -227,7 +227,7 @@
                         var data = childSnapshot.val();
                         
                         var listItem = document.createElement("a");
-                        listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/review?" + encode(childSnapshot.key));
+                        listItem.setAttribute("href", "https://reviews.bgmusic.xyz/review?" + encode(childSnapshot.key));
                         if (data.rewardNames) {
                             listItem.innerHTML = childSnapshot.key + 
                                 "<span> </span><span class='tooltipa'><img src='https://reviews.bgmusic.xyz/rewards.png' width='28px'>" +
@@ -270,7 +270,7 @@
 
                         if (gameTitle.includes(input)) {
                             var listItem = document.createElement("a");
-                            listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/review?" + encode(childSnapshot.key));
+                            listItem.setAttribute("href", "https://reviews.bgmusic.xyz/review?" + encode(childSnapshot.key));
                             if (data.rewardNames) {
                                 listItem.innerHTML = `>> ${childSnapshot.key} <span> </span>` + 
                                     "<span class='tooltipa'><img src='https://reviews.bgmusic.xyz/rewards.png' width='28px'>" +
@@ -305,7 +305,7 @@
 
                         if (gameTitle.includes(input)) {
                             var listItem = document.createElement("a");
-                            listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/review?" + encode(childSnapshot.key));
+                            listItem.setAttribute("href", "https://reviews.bgmusic.xyz/review?" + encode(childSnapshot.key));
                             if (data.rewardNames) {
                                 hiddenResults = hiddenResults+1
                             } else {
@@ -338,7 +338,7 @@
 
                         if (gameTitle.includes(input)) {
                             var listItem = document.createElement("a");
-                            listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/review?" + encode(childSnapshot.key));
+                            listItem.setAttribute("href", "https://reviews.bgmusic.xyz/review?" + encode(childSnapshot.key));
                             if (data.storeNames) {
                         if (data.rewardNames) {
                             listItem.innerHTML = childSnapshot.key + 
@@ -411,7 +411,7 @@
 
                         if (gameTitle.includes(input)) {
                             var listItem = document.createElement("a");
-                            listItem.setAttribute("href", "https://BG-Game-Reviews.glitch.me/review?" + encode(childSnapshot.key));
+                            listItem.setAttribute("href", "https://reviews.bgmusic.xyz/review?" + encode(childSnapshot.key));
                             if (data.rewardNames) {
                                 listItem.innerHTML = `>> ${childSnapshot.key} <span> </span>` + 
                                     "<span class='tooltipa'><img src='https://reviews.bgmusic.xyz/rewards.png' width='28px'>" +
